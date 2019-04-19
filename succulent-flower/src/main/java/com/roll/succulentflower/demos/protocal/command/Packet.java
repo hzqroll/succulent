@@ -1,5 +1,7 @@
 package com.roll.succulentflower.demos.protocal.command;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /**
  * 是同学过程中java对象的抽象类
  *
@@ -10,6 +12,7 @@ public abstract class Packet {
     /**
      * 协议版本
      */
+    @JSONField(deserialize = false, serialize = false)
     private Byte version = 1;
 
     /**
@@ -17,6 +20,7 @@ public abstract class Packet {
      *
      * @return 返回指令信息
      */
+    @JSONField(serialize = false)
     public abstract Byte getCommand();
 
     public Byte getVersion() {

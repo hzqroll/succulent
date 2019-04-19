@@ -4,11 +4,12 @@ import lombok.Data;
 
 /**
  * 登陆请求数据吧继承自packet,然后定义了三个字段
+ *
  * @author zongqiang.hao
  * created on 2018-12-16 16:17.
  */
 @Data
-public class LoginRequestPacket extends Packet implements Command{
+public class LoginRequestPacket extends Packet implements Command {
     @Override
     public Byte getCommand() {
         return LOGIN_REQUEST;

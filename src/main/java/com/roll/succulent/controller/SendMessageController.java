@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 @Controller("/send")
 public class SendMessageController {
 
-    public String sendMessage(String message){
+    public String sendMessage(String message) {
         return "hi";
     }
 }

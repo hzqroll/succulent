@@ -85,7 +85,7 @@ public class PacketCodeC {
         Serializer serializer = getSerializer(serializeAlgorathm);
 
         if (requestType != null && serializer != null) {
-            Packet packet =  serializer.deserialize(requestType, bytes);
+            Packet packet = serializer.deserialize(requestType, bytes);
             return packet;
         }
 
