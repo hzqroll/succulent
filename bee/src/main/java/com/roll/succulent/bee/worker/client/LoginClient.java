@@ -1,13 +1,19 @@
 package com.roll.succulent.bee.worker.client;
 
+import com.roll.succulent.bee.worker.protocal.PacketCodeC;
+import com.roll.succulent.bee.worker.protocal.request.MessageRequestPacket;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.AttributeKey;
 
 import java.util.Date;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -40,6 +46,22 @@ public class LoginClient {
         bootstrap.connect(host, port).addListener(future -> {
             if (future.isSuccess()) {
                 System.out.println(new Date() + ": 连接成功!");
+                // 连接成功后发送消息
+                new Thread(() -> {
+                    ChannelFuture channelFuture = (ChannelFuture) future;
+                    if (channelFuture.channel().attr(AttributeKey.valueOf("login")) != null) {
+                        //boolean loginFLag = (boolean) channelFuture.channel().attr(AttributeKey.valueOf("login")).get();
+                        while (true) {
+                            System.out.println("连接成功后发送消息到服务端");
+                            Scanner scanner = new Scanner(System.in);
+                            String message = scanner.nextLine();
+                            MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
+                            messageRequestPacket.setMessage(message);
+                            ByteBuf buf = PacketCodeC.INSTANCE.encode(channelFuture.channel().alloc(), messageRequestPacket);
+                            channelFuture.channel().writeAndFlush(buf);
+                        }
+                    }
+                }).start();
             } else if (retry == 0) {
                 System.err.println("重试次数已用完，放弃连接！");
             } else {

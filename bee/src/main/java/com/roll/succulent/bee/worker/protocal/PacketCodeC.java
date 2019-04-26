@@ -3,6 +3,8 @@ package com.roll.succulent.bee.worker.protocal;
 import com.roll.succulent.bee.worker.protocal.command.Command;
 import com.roll.succulent.bee.worker.protocal.request.LoginRequestPacket;
 import com.roll.succulent.bee.worker.protocal.request.LoginResponsePacket;
+import com.roll.succulent.bee.worker.protocal.request.MessageRequestPacket;
+import com.roll.succulent.bee.worker.protocal.request.MessageResponsePacket;
 import com.roll.succulent.bee.worker.serialize.Serializer;
 import com.roll.succulent.bee.worker.serialize.impl.JSONSerializer;
 import io.netty.buffer.ByteBuf;
@@ -27,6 +29,8 @@ public class PacketCodeC {
         packetTypeMap = new HashMap<>();
         packetTypeMap.put(Command.LOGIN_REQUEST, LoginRequestPacket.class);
         packetTypeMap.put(Command.LOGIN_RESPONSE, LoginResponsePacket.class);
+        packetTypeMap.put(Command.MESSAGE_REQUEST, MessageRequestPacket.class);
+        packetTypeMap.put(Command.MESSAGE_RESPONSE, MessageResponsePacket.class);
 
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();
