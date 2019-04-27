@@ -100,6 +100,19 @@ public class PacketCodeC {
         return null;
     }
 
+    public void encode(ByteBuf byteBuf, Packet packet) {
+        // 1. 序列化 java 对象
+        byte[] bytes = Serializer.DEFAULT.serialize(packet);
+
+        // 2. 实际编码过程
+        byteBuf.writeInt(MAGIC_NUMBER);
+        byteBuf.writeByte(packet.getVersion());
+        byteBuf.writeByte(Serializer.DEFAULT.getSerializeAlgorithm());
+        byteBuf.writeByte(packet.getCommand());
+        byteBuf.writeInt(bytes.length);
+        byteBuf.writeBytes(bytes);
+    }
+
     private Serializer getSerializer(byte serializeAlgorithm) {
 
         return serializerMap.get(serializeAlgorithm);

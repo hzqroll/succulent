@@ -1,5 +1,8 @@
 package com.roll.succulent.bee.worker.server;
 
+import com.roll.succulent.bee.worker.client.LoginHandler;
+import com.roll.succulent.bee.worker.code.Decode;
+import com.roll.succulent.bee.worker.code.Encode;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -26,8 +29,11 @@ public class LoginServer {
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
-                    protected void initChannel(NioSocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new ServerHandler());
+                    protected void initChannel(NioSocketChannel ch) {
+                        ch.pipeline().addLast(new Decode());
+                        ch.pipeline().addLast(new LoginHandler());
+                        ch.pipeline().addLast(new MessageRequestHandler());
+                        ch.pipeline().addLast(new Encode());
                     }
                 })
                 .option(ChannelOption.SO_BACKLOG, 1024)

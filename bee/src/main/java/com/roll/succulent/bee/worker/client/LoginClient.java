@@ -1,5 +1,7 @@
 package com.roll.succulent.bee.worker.client;
 
+import com.roll.succulent.bee.worker.code.Decode;
+import com.roll.succulent.bee.worker.code.Encode;
 import com.roll.succulent.bee.worker.protocal.PacketCodeC;
 import com.roll.succulent.bee.worker.protocal.request.MessageRequestPacket;
 import io.netty.bootstrap.Bootstrap;
@@ -8,7 +10,6 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
 
@@ -34,7 +35,10 @@ public class LoginClient {
                 .handler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) {
-                        ch.pipeline().addLast(new ClientHandler());
+                        ch.pipeline().addLast(new Decode());
+                        ch.pipeline().addLast(new LoginHandler());
+                        ch.pipeline().addLast(new MessageResponseHandler());
+                        ch.pipeline().addLast(new Encode());
                     }
                 })
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000);
