@@ -11,6 +11,9 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.Delimiters;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.util.AttributeKey;
 
 import java.util.Date;
@@ -35,6 +38,7 @@ public class LoginClient {
                 .handler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) {
+                        //ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
                         ch.pipeline().addLast(new Decode());
                         ch.pipeline().addLast(new LoginHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
@@ -61,8 +65,7 @@ public class LoginClient {
                             String message = scanner.nextLine();
                             MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
                             messageRequestPacket.setMessage(message);
-                            ByteBuf buf = PacketCodeC.INSTANCE.encode(channelFuture.channel().alloc(), messageRequestPacket);
-                            channelFuture.channel().writeAndFlush(buf);
+                            channelFuture.channel().writeAndFlush(messageRequestPacket);
                         }
                     }
                 }).start();

@@ -18,7 +18,7 @@ import java.util.Map;
  * created on 2018-12-16 17:04.
  */
 public class PacketCodeC {
-    private static final int MAGIC_NUMBER = 0x12345678;
+    public static final int MAGIC_NUMBER = 0x12345678;
     public static final PacketCodeC INSTANCE = new PacketCodeC();
 
     private final Map<Byte, Class<? extends Packet>> packetTypeMap;
