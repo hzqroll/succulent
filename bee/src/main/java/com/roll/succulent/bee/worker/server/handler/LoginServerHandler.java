@@ -1,10 +1,12 @@
-package com.roll.succulent.bee.worker.server;
+package com.roll.succulent.bee.worker.server.handler;
 
 import com.roll.succulent.bee.worker.protocal.request.LoginRequestPacket;
-import com.roll.succulent.bee.worker.protocal.request.LoginResponsePacket;
+import com.roll.succulent.bee.worker.protocal.response.LoginResponsePacket;
+import com.roll.succulent.bee.worker.session.Session;
+import com.roll.succulent.bee.worker.util.IDUtil;
+import com.roll.succulent.bee.worker.util.SessionUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.util.AttributeKey;
 
 import java.util.Date;
 
@@ -16,17 +18,22 @@ public class LoginServerHandler extends SimpleChannelInboundHandler<LoginRequest
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginRequestPacket loginRequestPacket) throws Exception {
         LoginResponsePacket loginResponsePacket = new LoginResponsePacket();
-        loginRequestPacket.setVersion(loginRequestPacket.getVersion());
+        loginResponsePacket.setVersion(loginRequestPacket.getVersion());
+        loginResponsePacket.setUserName(loginRequestPacket.getUserName());
+
         if (valid(loginRequestPacket)) {
             loginResponsePacket.setSuccess(true);
             System.out.println(new Date() + ": 登录成功!");
+            String userId = IDUtil.randomId();
+            loginResponsePacket.setUserId(userId);
+
+            System.out.println("[" + loginRequestPacket.getUserName() + "]登录成功");
             // 设置登陆成功标记位
-            ctx.channel().attr(AttributeKey.valueOf("login")).set(true);
+            SessionUtil.bindSession(new Session(userId, loginRequestPacket.getUserName()), ctx.channel());
         } else {
             loginResponsePacket.setReason("账号密码校验失败");
             loginResponsePacket.setSuccess(false);
             System.out.println(new Date() + ": 登录失败!");
-            ctx.channel().attr(AttributeKey.valueOf("login")).set(false);
         }
         // 登录响应
         ctx.channel().writeAndFlush(loginResponsePacket);

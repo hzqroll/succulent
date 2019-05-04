@@ -9,6 +9,11 @@ import com.roll.succulent.bee.worker.protocal.command.Command;
  */
 public class MessageRequestPacket extends Packet {
 
+    /**
+     * 要发送到的 userId,
+     */
+    private String toUserId;
+
     private String message;
 
     @Override
@@ -21,6 +26,19 @@ public class MessageRequestPacket extends Packet {
     }
 
     public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getToUserId() {
+        return toUserId;
+    }
+
+    public void setToUserId(String toUserId) {
+        this.toUserId = toUserId;
+    }
+
+    public MessageRequestPacket(String toUserId, String message) {
+        this.toUserId = toUserId;
         this.message = message;
     }
 }

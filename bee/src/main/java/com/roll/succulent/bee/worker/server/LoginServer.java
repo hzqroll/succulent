@@ -2,6 +2,7 @@ package com.roll.succulent.bee.worker.server;
 
 import com.roll.succulent.bee.worker.code.Decode;
 import com.roll.succulent.bee.worker.code.Encode;
+import com.roll.succulent.bee.worker.server.handler.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -33,6 +34,8 @@ public class LoginServer {
                         ch.pipeline().addLast(new LoginServerHandler());
                         ch.pipeline().addLast(new AuthHandler());
                         ch.pipeline().addLast(new MessageRequestHandler());
+                        ch.pipeline().addLast(new CreateGroupRequestHandler());
+                        ch.pipeline().addLast(new LogoutRequestHandler());
                         ch.pipeline().addLast(new Encode());
                     }
                 })

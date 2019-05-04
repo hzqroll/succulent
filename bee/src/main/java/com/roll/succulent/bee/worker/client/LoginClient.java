@@ -1,20 +1,21 @@
 package com.roll.succulent.bee.worker.client;
 
+import com.roll.succulent.bee.worker.client.console.impl.ConsoleCommandManager;
+import com.roll.succulent.bee.worker.client.console.impl.LoginConsoleCommandManager;
+import com.roll.succulent.bee.worker.client.handler.CreateGroupResponseHandler;
+import com.roll.succulent.bee.worker.client.handler.LoginHandler;
+import com.roll.succulent.bee.worker.client.handler.LogoutResponseHandler;
+import com.roll.succulent.bee.worker.client.handler.MessageResponseHandler;
 import com.roll.succulent.bee.worker.code.Decode;
 import com.roll.succulent.bee.worker.code.Encode;
-import com.roll.succulent.bee.worker.protocal.PacketCodeC;
-import com.roll.succulent.bee.worker.protocal.request.MessageRequestPacket;
+import com.roll.succulent.bee.worker.server.handler.CreateGroupRequestHandler;
+import com.roll.succulent.bee.worker.util.SessionUtil;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.Delimiters;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import io.netty.util.AttributeKey;
 
 import java.util.Date;
 import java.util.Scanner;
@@ -38,10 +39,11 @@ public class LoginClient {
                 .handler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) {
-                        //ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
                         ch.pipeline().addLast(new Decode());
                         ch.pipeline().addLast(new LoginHandler());
+                        ch.pipeline().addLast(new LogoutResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
+                        ch.pipeline().addLast(new CreateGroupResponseHandler());
                         ch.pipeline().addLast(new Encode());
                     }
                 })
@@ -53,22 +55,9 @@ public class LoginClient {
     private static void connect(Bootstrap bootstrap, String host, int port, int retry) {
         bootstrap.connect(host, port).addListener(future -> {
             if (future.isSuccess()) {
-                System.out.println(new Date() + ": 连接成功!");
-                // 连接成功后发送消息
-                new Thread(() -> {
-                    ChannelFuture channelFuture = (ChannelFuture) future;
-                    if (channelFuture.channel().attr(AttributeKey.valueOf("login")) != null) {
-                        //boolean loginFLag = (boolean) channelFuture.channel().attr(AttributeKey.valueOf("login")).get();
-                        while (true) {
-                            System.out.println("连接成功后发送消息到服务端");
-                            Scanner scanner = new Scanner(System.in);
-                            String message = scanner.nextLine();
-                            MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
-                            messageRequestPacket.setMessage(message);
-                            channelFuture.channel().writeAndFlush(messageRequestPacket);
-                        }
-                    }
-                }).start();
+                System.out.println(new Date() + ": 连接成功，启动控制台线程……");
+                ChannelFuture channelFuture = (ChannelFuture) future;
+                startConsoleThread(channelFuture);
             } else if (retry == 0) {
                 System.err.println("重试次数已用完，放弃连接！");
             } else {
@@ -82,5 +71,21 @@ public class LoginClient {
                         .SECONDS);
             }
         });
+    }
+
+    private static void startConsoleThread(ChannelFuture channelFuture) {
+        ConsoleCommandManager consoleCommandManager = new ConsoleCommandManager();
+        LoginConsoleCommandManager loginConsoleCommandManager = new LoginConsoleCommandManager();
+        Scanner scanner = new Scanner(System.in);
+
+        new Thread(() -> {
+            while (!Thread.interrupted()) {
+                if (SessionUtil.hasLogin(channelFuture.channel())) {
+                    consoleCommandManager.exec(channelFuture.channel(), scanner);
+                } else {
+                    loginConsoleCommandManager.exec(channelFuture.channel(), scanner);
+                }
+            }
+        }).start();
     }
 }
