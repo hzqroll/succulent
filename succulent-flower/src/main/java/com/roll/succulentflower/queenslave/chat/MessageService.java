@@ -1,4 +1,4 @@
-package com.roll.succulentflower.chat;
+package com.roll.succulentflower.queenslave.chat;
 
 
 import com.alibaba.fastjson.JSONObject;

@@ -1,4 +1,4 @@
-package com.roll.succulentflower.chat;
+package com.roll.succulentflower.queenslave.chat;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

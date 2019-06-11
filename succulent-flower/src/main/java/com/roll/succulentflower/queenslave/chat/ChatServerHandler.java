@@ -1,4 +1,4 @@
-package com.roll.succulentflower.chat;
+package com.roll.succulentflower.queenslave.chat;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
