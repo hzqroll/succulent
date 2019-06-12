@@ -20,7 +20,6 @@ public class TestServerInitializer extends ChannelInitializer<SocketChannel> {
         channelPipeline.addLast(new ProtobufDecoder(MyDataInfo.MyMessage.getDefaultInstance()));
         channelPipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
         channelPipeline.addLast(new ProtobufEncoder());
-
         channelPipeline.addLast(new TestServerHandler());
     }
 }

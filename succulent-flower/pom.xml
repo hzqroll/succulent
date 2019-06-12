@@ -85,6 +85,12 @@
             <artifactId>protobuf-java-util</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.thrift/libthrift -->
+        <dependency>
+            <groupId>org.apache.thrift</groupId>
+            <artifactId>libthrift</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
