@@ -1,5 +1,6 @@
 package com.roll.succulentflower.queenslave.thrift;
 
+import com.roll.succulentflower.queenslave.thrift.thrift.generated.PersonService;
 import org.apache.thrift.TProcessorFactory;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.server.THsHaServer;
@@ -17,14 +18,14 @@ public class ThriftServer {
         TNonblockingServerSocket socket = new TNonblockingServerSocket(8899);
         THsHaServer.Args arg = new THsHaServer.Args(socket).minWorkerThreads(2).maxWorkerThreads(4);
 
-        PersonServiceImpl;
+        PersonService.Processor<PersonServiceImpl> processor = new PersonService.Processor<>(new PersonServiceImpl());
 
         arg.protocolFactory(new TCompactProtocol.Factory());
         arg.transportFactory(new TFramedTransport.Factory());
-        arg.processorFactory(new TProcessorFactory(null));
+        arg.processorFactory(new TProcessorFactory(processor));
         TServer tServer = new THsHaServer(arg);
 
-        System.out.println("");
+        System.out.println("Thrift server started~");
         tServer.serve();
     }
 }
