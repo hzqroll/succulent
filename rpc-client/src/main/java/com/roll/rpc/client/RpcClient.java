@@ -8,7 +8,7 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 
 /**
  * @author roll
@@ -27,7 +27,7 @@ public class RpcClient extends SimpleChannelInboundHandler<RpcResponse> {
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, RpcResponse msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, RpcResponse msg) {
         this.response = msg;
     }
 
@@ -37,10 +37,10 @@ public class RpcClient extends SimpleChannelInboundHandler<RpcResponse> {
             // 创建并初始化netty客户端 BootStrap对象
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(eventExecutors);
-            bootstrap.channel(NioServerSocketChannel.class);
+            bootstrap.channel(NioSocketChannel.class);
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
-                protected void initChannel(SocketChannel ch) throws Exception {
+                protected void initChannel(SocketChannel ch) {
                     ChannelPipeline pipeline = ch.pipeline();
                     pipeline.addLast(new RpcEncoder(RpcRequest.class)); // 编码 RPC 请求
                     pipeline.addLast(new RpcDecoder(RpcResponse.class)); // 解码 RPC 响应

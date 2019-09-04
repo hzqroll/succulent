@@ -41,7 +41,7 @@ public class ZookeeperServiceDiscovery implements ServerDiscovery {
             return zkClient.readData(addressPath);
 
         } finally {
-            zkClient.close();
+            //zkClient.close();
         }
     }
 }

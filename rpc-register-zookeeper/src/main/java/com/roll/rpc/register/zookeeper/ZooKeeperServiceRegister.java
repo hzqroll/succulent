@@ -38,7 +38,7 @@ public class ZooKeeperServiceRegister implements ServerRegister {
 
         // 创建address节点(临时)
         String addressPath = servicePath + "/address-";
-        String addressNode = zkClient.createEphemeralSequential(addressPath, servicePath);
+        String addressNode = zkClient.createEphemeralSequential(addressPath, serviceAddress);
         System.out.println("create address node: " + addressNode);
     }
 }

@@ -11,11 +11,11 @@
 
     <context:property-placeholder location="classpath:rpc-sample-server.properties"/>
 
-    <bean id="serviceRegistry" class="com.roll.rpc.registry.zookeeper.ZooKeeperServiceRegistry">
+    <bean id="serviceRegistry" class="com.roll.rpc.register.zookeeper.ZooKeeperServiceRegister">
         <constructor-arg name="zkAddress" value="${rpc.registry_address}"/>
     </bean>
 
-    <bean id="rpcServer" class="com.roll.rpc.server.RpcService">
+    <bean id="rpcServer" class="com.roll.rpc.server.RpcServer">
         <constructor-arg name="serviceAddress" value="${rpc.service_address}"/>
         <constructor-arg name="serviceRegistry" ref="serviceRegistry"/>
     </bean>

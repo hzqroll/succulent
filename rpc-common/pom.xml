@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>rpc-common</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
 
     <dependencies>
         <!-- SLF4J -->
@@ -17,6 +18,12 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+        </dependency>
+
         <!-- Netty -->
         <dependency>
             <groupId>io.netty</groupId>

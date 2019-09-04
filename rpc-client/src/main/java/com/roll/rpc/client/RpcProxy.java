@@ -46,7 +46,7 @@ public class RpcProxy {
                     // get rpc address
                     if (serviceDiscovery != null) {
                         String serviceName = interfaceClass.getName();
-                        if (serviceVersion != null) {
+                        if (serviceVersion != null && serviceVersion.length() > 0) {
                             serviceName += "-" + serviceVersion;
                         }
                         serviceAddress = serviceDiscovery.discovery(serviceName);
