@@ -12,7 +12,7 @@ import java.util.UUID;
  * @author roll
  * created on 2019-09-03 20:07
  */
-public class RpcProxy {
+public class RpcProxy<T> {
     private String serviceAddress;
 
     private ServerDiscovery serviceDiscovery;
@@ -25,11 +25,11 @@ public class RpcProxy {
         this.serviceDiscovery = serviceDiscovery;
     }
 
-    public <T> T create(final Class<?> interfaceClass) {
+    public T create(final Class<?> interfaceClass) {
         return create(interfaceClass, "");
     }
 
-    public <T> T create(final Class<?> interfaceClass, final String serviceVersion) {
+    public T create(final Class<?> interfaceClass, final String serviceVersion) {
         // create proxy object
         return (T) Proxy.newProxyInstance(
                 interfaceClass.getClassLoader(),

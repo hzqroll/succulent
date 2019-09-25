@@ -13,7 +13,7 @@ public class HelloClient {
     public static void main(String[] args) throws Exception {
         ApplicationContext context = new ClassPathXmlApplicationContext("classpath:spring.xml");
         //ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("classpath:spring.xml");
-        RpcProxy rpcProxy = context.getBean(RpcProxy.class);
+        RpcProxy<Object> rpcProxy = context.getBean(RpcProxy.class);
 
         HelloService helloService = rpcProxy.create(HelloService.class);
         String result = helloService.hello("World");
